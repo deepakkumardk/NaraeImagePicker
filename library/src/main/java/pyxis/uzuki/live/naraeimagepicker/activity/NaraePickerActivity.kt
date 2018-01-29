@@ -32,6 +32,7 @@ class NaraePickerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_picker)
         SelectedItem.setLimits(intent.getIntExtra(Constants.EXTRA_LIMIT, Constants.LIMIT_UNLIMITED))
+        SelectedItem.setFilter(intent.getSerializableExtra(Constants.EXTRA_FILE_FILTER) as pyxis.uzuki.live.naraeimagepicker.item.FileFilter)
         isRequestAllMode = intent.getBooleanExtra(Constants.EXTRA_REQUEST_ALL_MODE, false)
 
         EventBus.getDefault().register(this)

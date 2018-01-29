@@ -2,15 +2,16 @@ package pyxis.uzuki.live.naraeimagepicker.fragment
 
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.TimingLogger
 import android.view.View
+import android.webkit.MimeTypeMap
 import kotlinx.android.synthetic.main.fragment_list.*
 import pyxis.uzuki.live.naraeimagepicker.Constants
 import pyxis.uzuki.live.naraeimagepicker.base.BaseFragment
 import pyxis.uzuki.live.naraeimagepicker.event.ToolbarEvent
 import pyxis.uzuki.live.naraeimagepicker.fragment.adapter.ImageAdapter
+import pyxis.uzuki.live.naraeimagepicker.item.FileFilter
 import pyxis.uzuki.live.naraeimagepicker.item.ImageItem
-import pyxis.uzuki.live.naraeimagepicker.utils.TimeLogger
+import pyxis.uzuki.live.naraeimagepicker.module.SelectedItem
 import pyxis.uzuki.live.naraeimagepicker.utils.getColumnString
 import pyxis.uzuki.live.richutilskt.utils.runAsync
 import pyxis.uzuki.live.richutilskt.utils.runOnUiThread
@@ -45,8 +46,21 @@ class ImageFragment : BaseFragment<ImageItem>() {
 
     private fun loadItem() {
         val projection = arrayOf(MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA)
-        val selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " =?"
-        val selectionArg = arrayOf(albumName)
+
+        val selection = when (SelectedItem.getFilter()) {
+            FileFilter.NONE -> MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " =? "
+            FileFilter.PNG -> MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " =? AND " + MediaStore.Files.FileColumns.MIME_TYPE + "=?"
+            FileFilter.JPEG -> MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " =? AND " + "(" + MediaStore.Files.FileColumns.MIME_TYPE + "=? OR " + MediaStore.Files.FileColumns.MIME_TYPE + "=?" + ")"
+        }
+
+        val selectionArg = when (SelectedItem.getFilter()) {
+
+            FileFilter.NONE -> arrayOf(albumName)
+            FileFilter.PNG -> arrayOf(albumName, MimeTypeMap.getSingleton().getMimeTypeFromExtension(".png"))
+            FileFilter.JPEG -> arrayOf(albumName, MimeTypeMap.getSingleton().getMimeTypeFromExtension(".jpg"),
+                    MimeTypeMap.getSingleton().getMimeTypeFromExtension(".jpeg"))
+        }
+
         val cursor = activity.contentResolver.query(cursorUri, projection, selection, selectionArg, orderBy)
         val items = HashSet<ImageItem>()
 
