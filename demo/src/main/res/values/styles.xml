@@ -8,4 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ImagePickerTheme">
+        <item name="colorPrimary">#886CE0</item>
+        <item name="colorPrimaryDark">#6F4BE6</item>
+    </style>
+
 </resources>

@@ -1,7 +1,10 @@
 package com.github.windsekirun.naraeimagepicker.fragment
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import com.github.windsekirun.naraeimagepicker.Constants
 import com.github.windsekirun.naraeimagepicker.base.BaseFragment
 import com.github.windsekirun.naraeimagepicker.event.ToolbarEvent
 import com.github.windsekirun.naraeimagepicker.fragment.adapter.ImageAdapter
@@ -9,6 +12,7 @@ import com.github.windsekirun.naraeimagepicker.item.FileItem
 import com.github.windsekirun.naraeimagepicker.module.PickerSet
 import com.github.windsekirun.naraeimagepicker.module.SelectedItem
 import kotlinx.android.synthetic.main.fragment_list.*
+import org.greenrobot.eventbus.EventBus
 import pyxis.uzuki.live.richutilskt.utils.runAsync
 import pyxis.uzuki.live.richutilskt.utils.runOnUiThread
 import pyxis.uzuki.live.richutilskt.utils.toFile
@@ -41,6 +45,15 @@ class AllFragment : BaseFragment<FileItem>() {
             runAsync { PickerSet.loadImageFirst(requireContext()) { bindList() } }
         } else {
             bindList()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == Constants.RC_IMAGE_DETAIL && data != null) {
+            this.activity?.toast("onActivityResult")
+            adapter.notifyDataSetChanged()
+//            EventBus.getDefault().post(ToolbarEvent("${SelectedItem.size} Selected", PickerSet.getSettingItem().uiSetting.enableUpInParentView))
         }
     }
 

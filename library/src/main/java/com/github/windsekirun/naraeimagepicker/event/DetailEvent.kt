@@ -1,5 +1,7 @@
 package com.github.windsekirun.naraeimagepicker.event
 
+import com.github.windsekirun.naraeimagepicker.item.FileItem
+
 /**
  * NaraeImagePicker
  * Class: DetailEvent
@@ -8,4 +10,4 @@ package com.github.windsekirun.naraeimagepicker.event
  * Description:
  */
 
-data class DetailEvent(val path: String)
+data class DetailEvent(val position: Int, val itemList: ArrayList<FileItem>)

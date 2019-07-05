@@ -2,6 +2,7 @@ package com.github.windsekirun.naraeimagepicker.utils
 
 import android.database.Cursor
 import android.util.Log
+import android.view.View
 
 /**
  * NaraeImagePicker
@@ -23,4 +24,12 @@ inline fun catchAll(action: () -> Unit) {
     } catch (t: Throwable) {
         Log.e("NaraeImagePicker", "Catch an exception. ${t.message}", t)
     }
+}
+
+fun View?.show() {
+    this?.visibility = View.VISIBLE
+}
+
+fun View?.hide() {
+    this?.visibility = View.GONE
 }

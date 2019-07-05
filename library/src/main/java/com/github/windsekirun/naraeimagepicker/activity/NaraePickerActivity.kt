@@ -9,12 +9,13 @@ import android.view.Menu
 import android.view.MenuItem
 import com.github.windsekirun.naraeimagepicker.Constants
 import com.github.windsekirun.naraeimagepicker.Constants.EXTRA_NAME
+import com.github.windsekirun.naraeimagepicker.Constants.RC_IMAGE_DETAIL
 import com.github.windsekirun.naraeimagepicker.event.DetailEvent
 import com.github.windsekirun.naraeimagepicker.event.FragmentTransitionEvent
 import com.github.windsekirun.naraeimagepicker.event.ToolbarEvent
-import com.github.windsekirun.naraeimagepicker.fragment.FolderFragment
 import com.github.windsekirun.naraeimagepicker.fragment.AllFragment
 import com.github.windsekirun.naraeimagepicker.fragment.FileFragment
+import com.github.windsekirun.naraeimagepicker.fragment.FolderFragment
 import com.github.windsekirun.naraeimagepicker.item.enumeration.ViewMode
 import com.github.windsekirun.naraeimagepicker.module.PickerSet
 import com.github.windsekirun.naraeimagepicker.module.SelectedItem
@@ -104,6 +105,12 @@ class NaraePickerActivity : AppCompatActivity() {
         finish()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val fragment = supportFragmentManager.findFragmentByTag(lastFragmentMode.name)
+        fragment?.onActivityResult(requestCode,resultCode,data)
+    }
+
     @Subscribe
     fun onToolbarChange(event: ToolbarEvent) {
         supportActionBar?.title = event.item
@@ -122,8 +129,9 @@ class NaraePickerActivity : AppCompatActivity() {
     @Subscribe
     fun onShowDetail(event: DetailEvent) {
         val intent = Intent(this, ImageDetailsActivity::class.java)
-        intent.putExtra(Constants.EXTRA_DETAIL_IMAGE, event.path)
-        startActivity(intent)
+        intent.putExtra(Constants.EXTRA_CURRENT_POSITION, event.position)
+        intent.putParcelableArrayListExtra(Constants.EXTRA_FILE_ITEM_LIST, event.itemList)
+        startActivityForResult(intent, RC_IMAGE_DETAIL)
     }
 
     private fun sendTo() {

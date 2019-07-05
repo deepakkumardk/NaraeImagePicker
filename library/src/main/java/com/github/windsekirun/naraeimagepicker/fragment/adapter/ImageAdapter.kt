@@ -42,7 +42,7 @@ class ImageAdapter(private val itemList: ArrayList<FileItem>,
             itemView.opacity.isSelected = SelectedItem.contains(item)
             itemView.btnMaximise.visibility = if (PickerSet.getSettingItem().enableDetailMode) View.VISIBLE else View.GONE
 
-            itemView.btnMaximise.setOnClickListener { EventBus.getDefault().post(DetailEvent(item.imagePath)) }
+            itemView.btnMaximise.setOnClickListener { EventBus.getDefault().post(DetailEvent(adapterPosition, itemList)) }
             itemView.setOnClickListener {
                 listener(item, adapterPosition, it)
             }

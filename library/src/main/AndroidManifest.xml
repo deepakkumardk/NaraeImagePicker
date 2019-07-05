@@ -2,14 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="pyxis.uzuki.live.naraeimagepicker">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application android:largeHeap="true">
-        <activity android:name="com.github.windsekirun.naraeimagepicker.activity.NaraePickerActivity"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
-        <activity android:name="com.github.windsekirun.naraeimagepicker.activity.ImageDetailsActivity"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
+        <activity
+            android:name="com.github.windsekirun.naraeimagepicker.activity.NaraePickerActivity"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+        <activity
+            android:name="com.github.windsekirun.naraeimagepicker.activity.ImageDetailsActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 
 </manifest>

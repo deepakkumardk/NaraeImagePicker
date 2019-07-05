@@ -63,4 +63,16 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
+
+    private fun getImagePickerSetting(): PickerSettingItem {
+        val item = PickerSettingItem()
+        item.pickLimit = 100
+        item.viewMode = ViewMode.FileView
+        item.enableDetailMode = true
+        item.uiSetting.themeResId = R.style.ImagePickerTheme
+        item.uiSetting.pickerTitle = "Select Pictures"
+        item.uiSetting.enableUpInParentView = true
+
+        return item
+    }
 }

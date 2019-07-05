@@ -1,17 +1,23 @@
 package com.github.windsekirun.naraeimagepicker.activity
 
-import android.graphics.drawable.ColorDrawable
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import android.view.View
 import com.github.windsekirun.naraeimagepicker.Constants
+import com.github.windsekirun.naraeimagepicker.event.ToolbarEvent
+import com.github.windsekirun.naraeimagepicker.fragment.adapter.ImagePreviewAdapter
+import com.github.windsekirun.naraeimagepicker.impl.OnImageSelected
+import com.github.windsekirun.naraeimagepicker.item.FileItem
 import com.github.windsekirun.naraeimagepicker.module.PickerSet
 import com.github.windsekirun.naraeimagepicker.utils.applyCustomPickerTheme
-import com.github.windsekirun.naraeimagepicker.utils.loadImage
+import com.github.windsekirun.naraeimagepicker.utils.catchAll
 import kotlinx.android.synthetic.main.activity_image_details.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import pyxis.uzuki.live.naraeimagepicker.R
-
 
 /**
  * NaraeImagePicker
@@ -22,29 +28,25 @@ import pyxis.uzuki.live.naraeimagepicker.R
  */
 
 class ImageDetailsActivity : AppCompatActivity() {
+    private lateinit var adapter: ImagePreviewAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         applyCustomPickerTheme(PickerSet.getSettingItem())
         setContentView(R.layout.activity_image_details)
 
-        val path = intent.getStringExtra(Constants.EXTRA_DETAIL_IMAGE)
+        val position = intent.getIntExtra(Constants.EXTRA_CURRENT_POSITION, 0)
+        val fileItemList = intent.getParcelableArrayListExtra<FileItem>(Constants.EXTRA_FILE_ITEM_LIST)
 
-        supportActionBar?.apply {
-            setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this@ImageDetailsActivity, android.R.color.black)))
-            title = ""
-            setDisplayHomeAsUpEnabled(true)
-            hide()
-        }
+        catchAll { EventBus.getDefault().register(this) }
 
-        photoView.setOnViewTapListener { _, _, _ ->
-            if (supportActionBar?.isShowing == true) {
-                supportActionBar?.hide()
-            } else {
-                supportActionBar?.show()
+        adapter = ImagePreviewAdapter(supportFragmentManager, fileItemList, object : OnImageSelected {
+            override fun onClick(view: View, fileItem: FileItem) {
+                adapter.notifyDataSetChanged()
             }
-        }
-
-        photoView.loadImage(path)
+        })
+        view_pager.adapter = adapter
+        view_pager.currentItem = position
     }
 
     override fun onOptionsItemSelected(menuItem: MenuItem): Boolean {
@@ -52,5 +54,20 @@ class ImageDetailsActivity : AppCompatActivity() {
             menuItem.itemId == android.R.id.home -> onBackPressed()
         }
         return super.onOptionsItemSelected(menuItem)
+    }
+
+    override fun onBackPressed() {
+        setResult(Activity.RESULT_OK, Intent())
+        finish()
+    }
+
+    @Subscribe
+    fun onDetailToolbarChange(event: ToolbarEvent) {
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        catchAll { EventBus.getDefault().unregister(this) }
     }
 }

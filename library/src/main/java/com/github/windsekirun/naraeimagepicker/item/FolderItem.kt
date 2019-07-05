@@ -1,6 +1,7 @@
 package com.github.windsekirun.naraeimagepicker.item
 
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
 /**
  * NaraeImagePicker
@@ -9,14 +10,5 @@ import java.io.Serializable
  *
  * Description:
  */
-
-data class FolderItem(val name: String, val imagePath: String) : Serializable {
-
-    override fun equals(other: Any?): Boolean {
-        return name == (other as FolderItem).name
-    }
-
-    override fun hashCode(): Int {
-        return name.hashCode()
-    }
-}
+@Parcelize
+data class FolderItem(val name: String, val imagePath: String) : Parcelable
